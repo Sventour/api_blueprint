@@ -1,8 +1,151 @@
 FORMAT: 1A
-# My API
+HOST: https://vimeo.api.com/
+Version: 3.2
 
-## GET /places
+# Vimeo API 
 
-+ Response 200 (text/plain)
+# Group Text Tracks 
 
-        Hello World!
+## Text Tracks [/videos/{video_id}/texttracks]
+
++ Parameters
+    + video_id: 764 (number, required) - ID for video to retrieve text tracks
+    
+### GET
++ Response 404 (application/json)
+
++ Response 200 (application/json) 
+    + Attributes 
+        + total: 2 (number) - Total number of items in collection
+        + data (array[Text Track])
+
+### POST
++ Request (application/json)
+    + Attributes
+        + active (boolean) 
+        + type (enum[string])
+        + language (string)
+        + name (string)
+
++ Response 200 (application/json)
+    + Attributes (Text Track)
+
++ Response 403 
+
+## Single Text Track [/videos/{video_id}/texttracks/{text_track_id}]
+
++ Parameters
+    + video_id: 567 (number, required)
+    + text_track_id: 789 (number, required)
+    
+### GET
++ Response 200 (application/json)
+    + Attributes (Text Track) 
+
+### PATCH 
++ Request (application/json)    
+    + Attributes
+        + active (boolean, required)
+        + type (enum[string], required)
+        + language (string, required)
+        + name (string, required)
+
++ Response 200 (application/json)
+    + Attributes (Text Track)
+
++ Response 404 (application/json)
++ Response 403 (application/json)
+
+
+### DELETE
++ Response 200 (application/json)
+    + Attributes (Text Track)
+
++ Response 404 (application/json)
++ Response 403 (application/json)
+
+# Group Users
+
+## Me [/me]
+
+### GET 
++ Response 200 (application/json)
+    + Attributes (User)
+
+# Data Structures
+
+## Text Track Collection (object)
++ total: 2 (number) - Total number of items in collection
++ data (array)
+
+## Text Track (object)
+
++ uri: /texttracks/163 (string) - The Container's relative URI
++ active: true (boolean) - True if this text track is an active text track for this video
++ type (enum[string])
+    + caption
+    + subtitle
++ language: en (string) - The language code for this texttrack
++ link: http://f.vimeocdn.com/tt/764.vtt?token=tNSuohPc3M1TkD1D7poYfvZFzNaAYFZ= - The readonly url of the texttrack file. If this is the first time you created the resource, you can upload to this link.
++ hls_link: http://f.vimeocdn.com/tt/764.vtt?token=tNSuohPc3M1TkD1D7poYfvZFzNaAYFZ= -   The readonly url of the texttrack file, intened for use with HLS playback
++ name: jumbo.srt (string) - The descriptive name of this texttrack
+
+## User (object)
++ uri: /user/123 (string) - The user's relative URI 
++ name: James (string) - the user's display name
++ link: http://vimeo.com/user123 (string) - The absoulte URL of this user
++ location: New York, NY (string) - The user's location
++ bio: Film maker from New York (string) - The User's bio
++ created_time: `2015-10-19T15:35:08+00:00` (string) - The time this user account was created
++ account (enum[string])
+    + plus
+    + pro
+    + basic
++ pictures: Insert Picture Object
++ websites (array[string])
+    + name: MySite - The website name 
+    + link: http://mysite.com - The URL to the website 
+    + description: Best Website on earth - The website's description
+        
++ `upload_quota` (object)
+    + space (object)
+        + free: 12345435 (number) - The amount of free space left for user's upload quota 
+        + max: 5437863224 (number) - The maximum amount of space allotted for user's upload quota
+        + used: 734534 (number) - The total amount of quota the user has used for the current period
+    + quota (object)
+        + hd: true (boolean) - True if the user can upload HD videos
+        + sd: true (boolean) - True if the user can upload SD videos
++ payment (object) 
+    + active: true (boolean) - True if the credit card is active
+    + type: cc (string) 
+    + cc (array[string])
+        + type: visa (string) - Credit Card type
+        + `last_four`: 1234 (string) - last four `(4)` digits of credit card
+        + `expiration_date`: 118 (string) - Expiration date `(mm/yy)` for credit card
+
+## Pictures (object)
++ uri: /pictures/456 (string) - The Picture's URI
++ active: true (boolean) - If this picture is the active picture for it's parent resource
++ type (enum[string])
+    + caution
+    + default
+    + custom
++ sizes (array)
+    + width: 30 (number)
+    + height: 30 (number)
+    + link: http://devi.vimeocdn.com/portait/1234_30x30.jpg?r=pad
++ link: http://devi.vimeocdn.com/portait/1234_30x30.jpg?r=pad (string) - This link will only appear the first time you create the picture resource. You will be able to upload directly to this url. For more information read about (picture uploads)[https://developer.vimeo.com/api/upload/pictures]
+
+## Albums (object)
++ uri: /albums/234 (string)
++ name: Album One (string) 
++ description: Best animation videos (string) 
++ link: http://vimeo.com/album/234 (string) 
++ duration: 7923845 (number) 
++ `created_time`: `2015-10-19T15:35:08+00:00` (string) 
++ `modified_time`: `2015-10-21T15:35:08+00:00` (string)
++ privacy (array)
+    + view (enum[string])
+        + anybody
+        + password
++ Include Pictures
